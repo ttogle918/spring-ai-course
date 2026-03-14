@@ -27,3 +27,6 @@
 
 참고
 - 스트리밍 구현은 프로젝트에 따라 SSE, WebSocket, 혹은 Reactive WebFlux 중 적절한 선택을 해야 합니다. 본 챕터는 개념 이해와 예제 중심입니다.
+
+관련 문서
+- [AI 구성 요소 노트](AI_COMPONENTS.md) : `Flux`, `ChatModel`, `ChatOptions` 등 핵심 컴포넌트 설명
