@@ -18,11 +18,13 @@ import reactor.core.publisher.Flux;
 @Slf4j
 public class AiController {
   // ##### 필드 #####
-  @Autowired
-  private AiService aiService;
-  
+  // ChatModel API 사용
   // @Autowired
-  // private AiServiceByChatClient aiService;
+  // private AiService aiService;
+  
+  // ChatClient API 사용
+  @Autowired
+  private AiServiceByChatClient aiService;
 
   // ##### 요청 매핑 메소드 #####
   @PostMapping(

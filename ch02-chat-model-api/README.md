@@ -30,3 +30,4 @@
 
 관련 문서
 - [AI 구성 요소 노트](AI_COMPONENTS.md) : `Flux`, `ChatModel`, `ChatOptions` 등 핵심 컴포넌트 설명
+- [AI 구현 예제 (더미)](AI_IMPLEMENTATIONS.md) : RAG 및 Agent 방식의 더미 구현 스니펫
