@@ -40,3 +40,35 @@ Learning notes
 - Design: prefer small, single-responsibility agents and keep orchestration logic lightweight.
 - Prompting: enforce strict output formats (JSON) and include repair prompts for robustness.
 - Observability: log prompts/responses (mask secrets), collect token metrics, and monitor latencies.
+
+What you should know
+
+- Agent responsibilities: agents are domain specialists; keep their surface area minimal and return typed DTOs when possible.
+- Tool-based orchestration: the orchestrator exposes `@Tool` methods so an LLM can programmatically invoke agents — design tools to be idempotent and side-effect safe.
+- Concurrency & SSE: worker threads run in parallel; use `InheritableThreadLocal` carefully to propagate `SseEmitter` instances and avoid blocking I/O in threads.
+- Prompt engineering: prefer short, deterministic system prompts, include examples of expected JSON, and add repair prompts for malformed outputs.
+- Testing: unit-test agent logic and use integration tests that mock `ChatClient` responses for deterministic behavior.
+
+Example walkthrough
+
+1. User submits free-text request (e.g., "Plan a 3-day, budget-friendly trip to Jeju").
+2. `TravelOrchestrator.parseUserQuery()` extracts structured `Requirements` via an LLM call.
+3. Orchestrator calls agents in parallel (`AttractionAgent`, `RestaurantAgent`, `AccommodationAgent`) to collect DTOs.
+4. `PlanAgent` assembles collected DTOs and requests a final `Plan` entity from the LLM.
+5. `BudgetAgent` validates costs and triggers a replan if the budget is exceeded.
+
+Run the app (example):
+
+```bash
+cd ch14-multi-agent
+../gradlew bootRun
+# then open http://localhost:8080/travel-multi-agent
+```
+
+Extra notes & recommended reading
+
+- Use `ChatClient.entity(...)` to convert LLM responses directly into DTOs and centralize JSON repair logic in a helper.
+- Be mindful of cost: batch or stub LLM calls in unit tests and add caching for repeated searches.
+- Security: never log raw user inputs or API keys; sanitize logs and redact tokens.
+- Observability: add metrics for per-agent latency and per-request token consumption to identify expensive steps.
+- When extending to multiple LLMs (see `ch14-multi-agent-with-multi-llm`), abstract provider-specific parsing and rate-limiting into a small adapter layer.
